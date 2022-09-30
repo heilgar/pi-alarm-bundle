@@ -8,15 +8,15 @@ from pydub.playback import play
 
 from serial import get_serial
 
-GPIO.setmode(GPIO.BCM)
-
 STATE = False
 bState = False
 buttonPressed = 0
+
+# GPIO.setmode(GPIO.BCM)
+GPIO.setmode(GPIO.BOARD)
 B_PIN = 13
 
 GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BOARD)
 GPIO.setup(B_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 def button_callback(channel):
