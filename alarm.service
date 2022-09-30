@@ -4,7 +4,7 @@ After = network.target
 
 [Service]
 Type = simple
-ExecStart = python /root/bootstrap/alarm.py
+ExecStart = python /root/bootstrap/pi-alarm-bundle/alarm.py
 User = root
 Group = root
 Restart = on-failure
