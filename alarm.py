@@ -8,13 +8,16 @@ from pydub.playback import play
 
 from serial import get_serial
 
-# GPIO.setmode(GPIO.BCM)
+GPIO.setmode(GPIO.BCM)
 
 STATE = False
 bState = False
 buttonPressed = 0
-B_PIN = 27
+B_PIN = 13
 
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(B_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 def button_callback(channel):
     global STATE
@@ -30,7 +33,7 @@ def button_callback(channel):
         buttonPressed = now
         play_alarm()
 
-    if buttonPressed not 0:
+    if buttonPressed != 0:
         diff = now - buttonPressed
         if diff > 1:
             buttonPressed = 0
@@ -66,11 +69,6 @@ def play_alarm():
 def play_disable_alarm():
     song = AudioSegment.from_mp3('no_alarm.mp3')
     play(song)
-
-
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(B_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 GPIO.add_event_detect(B_PIN, GPIO.RISING, callback=button_callback)
 
