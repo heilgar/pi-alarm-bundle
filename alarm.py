@@ -19,11 +19,15 @@ B_PIN = 13
 GPIO.setwarnings(False)
 GPIO.setup(B_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
+DEFAULT_SOUND_PATH = '/root/bootstrap/pi-alarm-bundle/'
+
 def button_callback(channel):
     global STATE
     global buttonPressed
+    global bState
 
     STATE = True
+    bState = True
 
     now = datetime.now()
 
@@ -39,7 +43,7 @@ def button_callback(channel):
             play_disable_alarm()
 
 
-def get_state():
+def get_server_state():
     import requests
     import json
     global buttonPressed
@@ -55,21 +59,19 @@ def get_state():
     global STATE
     if status == 'Yes':
         STATE = True
-        buttonPressed = datetime.now()
     else:
         STATE = False
-        buttonPressed = 0
 
     return STATE
 
 
 def play_alarm():
-    song = AudioSegment.from_mp3('alarm.mp3')
+    song = AudioSegment.from_mp3(DEFAULT_SOUND_PATH + 'alarm.mp3')
     play(song)
 
 
 def play_disable_alarm():
-    song = AudioSegment.from_mp3('no_alarm.mp3')
+    song = AudioSegment.from_mp3(DEFAULT_SOUND_PATH + 'no_alarm.mp3')
     play(song)
 
 GPIO.add_event_detect(B_PIN, GPIO.RISING, callback=button_callback)
@@ -79,8 +81,8 @@ while True:
     prevState = STATE
     for i in range(6):
         sleep(1)
-        state = get_state()
-        print('received from server', state)
+        get_server_state()
+
         if STATE:
             if prevState == STATE:
                 continue
