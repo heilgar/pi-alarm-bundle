@@ -13,4 +13,4 @@ RestartSec = 5
 TimeoutStartSec = infinity
 
 [Install]
-WantedBy = multi-user.target # Make it accessible to other users
+WantedBy = multi-user.target
