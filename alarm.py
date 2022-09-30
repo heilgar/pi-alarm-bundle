@@ -21,11 +21,9 @@ GPIO.setup(B_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 def button_callback(channel):
     global STATE
-    global bState
     global buttonPressed
 
     STATE = True
-    bState = True
 
     now = datetime.now()
 
@@ -35,7 +33,8 @@ def button_callback(channel):
 
     if buttonPressed != 0:
         diff = now - buttonPressed
-        if diff > 1:
+        diff = diff.total_seconds() / 60
+        if diff > 1.0:
             buttonPressed = 0
             play_disable_alarm()
 
@@ -43,6 +42,7 @@ def button_callback(channel):
 def get_state():
     import requests
     import json
+    global buttonPressed
 
     r = requests.get(
         'https://api.invalid/v1/status/device',
@@ -55,8 +55,10 @@ def get_state():
     global STATE
     if status == 'Yes':
         STATE = True
+        buttonPressed = datetime.now()
     else:
         STATE = False
+        buttonPressed = 0
 
     return STATE
 
@@ -72,8 +74,8 @@ def play_disable_alarm():
 
 GPIO.add_event_detect(B_PIN, GPIO.RISING, callback=button_callback)
 
+print('start')
 while True:
-    print('start')
     prevState = STATE
     for i in range(6):
         sleep(1)
