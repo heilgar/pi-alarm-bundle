@@ -1,5 +1,13 @@
+import os
+from dotenv import load_dotenv
 
-def get_serial():
+load_dotenv()
+
+DEFAULT_SOUND_PATH = os.getenv('DEFAULT_SOUND_PATH', './resources')
+API_PATH = os.getenv('API_PATH', 'https://api.invalid/v1/status/device')
+
+
+def serial() -> str:
     cpuserial = "0000000000000000"
     try:
         f = open('/proc/cpuinfo', 'r')
@@ -11,6 +19,3 @@ def get_serial():
         cpuserial = "ERROR000000000"
 
     return cpuserial
-
-if __name__ == '__main__':
-    print(get_serial())
