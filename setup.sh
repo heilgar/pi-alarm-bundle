@@ -2,10 +2,15 @@ echo "Installing required packages"
 apt -y install ffmpeg rpi.gpio
 pip install -r requirements.txt
 echo "Copying service"
-cp ./config/alarm.service /etc/systemd/system/alarm.service
-echo "Staring service"
-systemctl enable alarm.service
+cp ./services/*.service /etc/systemd/system/
+echo "Staring services"
+
+for service in "./services"/*
+do
+  systemctl enable "$service"
+done
 systemctl daemon-reload
-systemctl start alarm.service
-echo "Generating serial"
-python serial.py
+for service in "./services"/*
+do
+  systemctl start "$service"
+done

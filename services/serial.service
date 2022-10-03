@@ -1,0 +1,13 @@
+[Unit]
+Description = 'Print serial'
+
+[Service]
+Type = oneshot
+ExecStart = python /root/bootstrap/pi-alarm-bundle/env.py
+User = root
+Group = root
+RemainAfterExit=yes
+
+
+[Install]
+WantedBy = multi-user.target
