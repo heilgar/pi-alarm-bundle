@@ -3,8 +3,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-B_PIN = os.getenv('B_PIN', 13)
-DEFAULT_SOUND_PATH = os.getenv('DEFAULT_SOUND_PATH', './resources')
+B_PIN = int(os.getenv('B_PIN', 13))
+DEFAULT_SOUND_PATH = os.getenv('DEFAULT_SOUND_PATH', './resources/')
+VOLUME_SOUND_PATH = os.getenv('VOLUME_SOUND_PATH', '/mnt/volume/')
+ALARM_F_NAME = os.getenv('ALARM_F_NAME', '1.mp3')
+NO_F_NAME = os.getenv('NO_F_NAME', '2.mp3')
 API_PATH = os.getenv('API_PATH', 'https://api.invalid/v1/status/device')
 
 
