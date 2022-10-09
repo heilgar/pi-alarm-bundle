@@ -7,7 +7,8 @@ ExecStart = python /root/bootstrap/pi-alarm-bundle/env.py
 User = root
 Group = root
 RemainAfterExit=yes
-
+StandardOutput=journal
+SyslogIdentifier=serial
 
 [Install]
 WantedBy = multi-user.target
