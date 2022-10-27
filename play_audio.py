@@ -25,6 +25,7 @@ def __play(file_path: str | None = None):
     file = AudioSegment.from_file(file_path)
 
     if playback_pr is not None and playback_pr.is_alive():
+        print('Terminate should be here')
         playback_pr.terminate()
     playback_pr = Process(target=play, args=(file,))
     playback_pr.start()

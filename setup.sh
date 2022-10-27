@@ -2,7 +2,7 @@ echo "Enable volume automount"
 mkdir /mnt/volume
 chmod 770 /mnt/volume
 cp /etc/fstab /etc/fstab.backupd
-echo '/dev/sda1 /mnt/volume vfat auto,nofail,x-systemd.device-timeout=30  0 0' >> /etc/fstab
+echo '/dev/sda1 /mnt/volume fat32 auto,nofail,x-systemd.device-timeout=30  0 0' >> /etc/fstab
 echo "Installing required packages"
 pip install -r requirements.txt
 echo "Copying service"
