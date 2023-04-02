@@ -1,6 +1,6 @@
 import requests
 import json
-from env import API_PATH, serial
+from env import API_PATH, serial, IS_LOCAL
 from .Publisher import Publisher
 from .Status import Status
 
@@ -25,6 +25,8 @@ class LanPublisher(Publisher):
                 else:
                     self.notify(False)
         except Exception as e:
-            print('Something went wrong during network request')
+            if IS_LOCAL:
+                print(e)
+            print('Something went wrong')
             pass
 

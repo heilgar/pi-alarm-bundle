@@ -14,13 +14,15 @@ status.attach(observer)
 
 lanListener = LanPublisher(status)
 
-# GPIO.setmode(GPIO.BCM)
+# GPIO.setmode(GPIO.BCM) # not required for current logic
+
 GPIO.setmode(GPIO.BOARD)
 
 GPIO.setwarnings(False)
 GPIO.setup(B_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 buttonListener = ButtonPublisher(status)
 GPIO.add_event_detect(B_PIN, GPIO.RISING, callback=buttonListener.publish_status)
+
 
 
 def run():
