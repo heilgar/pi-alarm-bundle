@@ -14,8 +14,8 @@ IS_LOCAL = os.getenv('IS_LOCAL', False)
 
 
 def serial() -> str:
-    if IS_LOCAL:
-        return '3A64DB3D-A12F-43ED-88C7-377D542B776A'
+    # if IS_LOCAL:
+    #     return '3A64DB3D-A12F-43ED-88C7-377D542B776A'
 
     cpuserial = "0000000000000000"
     try:
