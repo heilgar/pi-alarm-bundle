@@ -1,3 +1,4 @@
+import time
 from os.path import exists
 from pydub import AudioSegment, playback
 from multiprocessing import Process
@@ -23,61 +24,62 @@ def __get_file_path(alarm: bool = False) -> str:
         return DEFAULT_SOUND_PATH + file_name
 
 
+def get_silence_file():
+    if exists(VOLUME_SOUND_PATH + SILENCE_F_NAME):
+        return VOLUME_SOUND_PATH + SILENCE_F_NAME
+
+    return DEFAULT_SOUND_PATH + SILENCE_F_NAME
+
+
 def __play(file_path: str | None = None):
     if not file_path:
         return
 
     global alarm_playback
-    file = AudioSegment.from_file(file_path)
+    file_to_play = AudioSegment.from_file(file_path)
 
     if alarm_playback is not None and alarm_playback.is_alive():
         alarm_playback.kill()
 
-    alarm_playback = Process(target=playback.play, args=(file,))
+    alarm_playback = Process(target=playback.play, args=(file_to_play,))
     alarm_playback.start()
+    toggle_silence(file_to_play)
 
 
 # silence should be refactored
-def __play_silence():
+def __play_silence(wait_for_file):
     global silence_playback
     global is_silence
 
     if is_silence:
         if not silence_playback or not silence_playback.is_alive():
-            silence_playback = Process(target=__play_silence_pr)
+            silence_playback = Process(target=__play_silence_pr, args=(wait_for_file,))
             silence_playback.start()
     else:
         silence_playback.kill()
 
 
-def __play_silence_pr():
+def __play_silence_pr(wait_for_file):
+    if wait_for_file:
+        time.sleep(wait_for_file.duration_seconds - 1)
     '''
         While alarm we have to send signal to block another signals in audio network
     '''
     while True:
-        file = AudioSegment.from_file(DEFAULT_SOUND_PATH + SILENCE_F_NAME)
+        file = AudioSegment.from_file(get_silence_file())
         sp = playback._play_with_simpleaudio(file)
-        sp.wait_done()
+        time.sleep(file.duration_seconds - 1)
 
 
-
-def play_silence():
+def toggle_silence(wait_for_file):
     global is_silence
-    is_silence = True
-    __play_silence()
-
-
-def stop_silence():
-    global is_silence
-    is_silence = False
-    __play_silence()
+    is_silence = not is_silence
+    __play_silence(wait_for_file)
 
 
 def play_alarm():
-    play_silence()
     __play(__get_file_path(True))
 
 
 def play_abort_alarm():
-    stop_silence()
     __play(__get_file_path(False))
