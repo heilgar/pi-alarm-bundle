@@ -14,7 +14,6 @@ class Observer:
 
 class StatusObserver(Observer):
     def update(self, status: Status):
-        print('Observed state: ' + str(status.state))
         if status.state:
             play_alarm()
         else:
